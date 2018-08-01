@@ -1,0 +1,20 @@
+#This script will create NOVOPLASTY <https://github.com/ndierckx/NOVOPlasty> config files for each genome, named on a list. One sample name per line, without spaces or extension file names.
+
+# needs the paired reads to be in a folder called genomes
+
+#needs the original config file (named config.txt) to be edited with the full path of the genomes and the parameters to be used for all the samples. Give full paths and instead of naming the file just put mtg.fq  (/path/to/genome) or adequate extension to the file, the same on the reads files 
+
+# to create the list. This will work on the paired outputs after running <https://github.com/linsalrob/fastq-pair>, if not, just replace the pattern <_R[1,2].*.paired.*> for your file extension
+
+ls genomes/ |sed -e 's/_R[1,2].*.paired.*//g' > list.txt
+
+
+for file in $(cat list.txt)
+do
+sed -e "s/mtg/$file/g" config.txt > config_${file}.txt
+mkdir ${file}
+perl NOVOPlasty2.7.2.pl -c config_${file}.txt
+mv *${file}* *${file}/
+done
+
+echo = `date` job $JOB_NAME done
