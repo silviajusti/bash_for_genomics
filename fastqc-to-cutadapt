@@ -14,6 +14,6 @@ for sample_name in $(cat sample_names.txt)
 do
 sed -n -e '/Source/,/END_MODULE/ p' ${sample_name}R1_001_fastqc/fastqc_data.txt |grep 'Illumina\|TruSeq\|Primer' |awk '{print $1}' |head -n 1 > ${sample_name}R1_adapter.txt
 sed -n -e '/Source/,/END_MODULE/ p' ${sample_name}R2_001_fastqc/fastqc_data.txt |grep grep 'Illumina\|TruSeq\|Primer'  |awk '{print $1}' |head -n 1> ${sample_name}R2_adapter.txt
-cutadapt -a "$(< ${sample_name}R1_adapter.txt)" -A "$(< ${sample_name}R2_adapter.txt)" --minimum-length 50 -q 15,15 -o ${sample_name}R1_Trimmed_filtered.fastq -p /data/genomics/justis/mt_genomes_col/${sample_name}R2_Trimmed_filtered.fas$
+cutadapt -a "$(< ${sample_name}R1_adapter.txt)" -A "$(< ${sample_name}R2_adapter.txt)" --minimum-length 50 -q 15,15 -o ${sample_name}R1_Trimmed_filtered.fastq -p ${sample_name}R2_Trimmed_filtered.fas$
 done
 echo = `date` job $JOB_NAME done
