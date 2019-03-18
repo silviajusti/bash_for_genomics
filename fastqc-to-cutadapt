@@ -6,7 +6,7 @@ ls /path/to/illumina_runs > run_names.txt
 
 sed -i 's/R1_001.fastq//g' run_names.txt
 sed -i 's/R2_001.fastq//g' run_names.txt
-run_names.txt -u >sample_names.txt
+run_names.txt uniq > sample_names.txt
 rm run_names.txt
 
 for sample_name in $(cat sample_names.txt)
