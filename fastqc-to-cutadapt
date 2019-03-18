@@ -1,0 +1,18 @@
+#! /bin/bash
+#this takes the output fastqc_data.txt and inputs the adapters to cutadapt fro trimming
+
+
+ls /path/to/illumina_runs > run_names.txt
+
+sed -i 's/R1_001.fastq//g' run_names.txt
+sed -i 's/R2_001.fastq//g' run_names.txt
+run_names.txt -u >sample_names.txt
+rm run_names.txt
+
+for sample_name in $(cat sample_names.txt)
+
+do
+sed -n -e '/Source/,/END_MODULE/ p' ${sample_name}R1_001_fastqc/fastqc_data.txt |grep 'Illumina\|TruSeq\|Primer' |awk '{print $1}' > ${sample_name}R1_adapter.txt
+sed -n -e '/Source/,/END_MODULE/ p' ${sample_name}R2_001_fastqc/fastqc_data.txt |grep grep 'Illumina\|TruSeq\|Primer'  |awk '{print $1}'> ${sample_name}R2_adapter.txt
+cutadapt -a echo"$(< ${sample_name}R1_adapter.txt)" -A echo"$(< ${sample_name}R2_adapter.txt)" --minimum-length 50 -q 15,15 -o ${sample_name}R1_Trimmed_filtered.fastq -p /data/genomics/justis/mt_genomes_col/${sample_name}R2_Trimmed_filtered.fastq /data/genomics/justis/mt_genomes_col/${sample_name}R1_001.fastq /data/genomics/justis/mt_genomes_col/${sample_name}R2_001.fastq
+done
